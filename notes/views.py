@@ -1,7 +1,7 @@
 from rest_framework import generics
 
 from .models import User, Note
-from .serializers import UserSerializer, NoteSerializer
+from .serializers import UserSerializer, NoteSerializer,NoteDetailSerializer
 
 
 # Create your views here.
@@ -15,3 +15,13 @@ from .serializers import UserSerializer, NoteSerializer
 class NoteListView(generics.ListAPIView, generics.CreateAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+
+
+class NoteView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = NoteDetailSerializer
+
+    def get_object(self):
+        url_slug = self.kwargs['slug_url']
+        print(url_slug)
+        notes = Note.objects.get(slug_address=url_slug)
+        return notes

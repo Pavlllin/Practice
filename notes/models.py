@@ -15,11 +15,11 @@ class Note(models.Model):
 
     slug_address = models.CharField(max_length=100,
                                     verbose_name="адрес записи",
-                                    unique=True,
-                                    null=True)
+                                    null=True,
+                                    blank=True)
 
     type_of_text = models.ForeignKey('notes.Types', on_delete=models.CASCADE,
-                                     verbose_name="Тип записи", null=True)
+                                     verbose_name="Тип записи", null=False)
 
 
 class Types(models.Model):

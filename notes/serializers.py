@@ -12,4 +12,10 @@ class UserSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
+        fields = ("text", "author", "type_of_text",)
+
+
+class NoteDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
         fields = "__all__"
