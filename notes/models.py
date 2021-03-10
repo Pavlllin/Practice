@@ -12,17 +12,24 @@ class Note(models.Model):
                             verbose_name="Текст записи")
     author = models.ForeignKey('notes.User', on_delete=models.CASCADE,
                                verbose_name="Автор записи")
-    address = models.ForeignKey('notes.Address', on_delete=models.CASCADE,
-                                 verbose_name="адрес записи", null=True)
+
+    slug_address = models.CharField(max_length=100,
+                                    verbose_name="адрес записи",
+                                    unique=True,
+                                    null=True)
+
+    type_of_text = models.ForeignKey('notes.Types', on_delete=models.CASCADE,
+                                     verbose_name="Тип записи", null=True)
 
 
-class Address(models.Model):
+class Types(models.Model):
     class Meta:
-        verbose_name = "Ссылки"
-        verbose_name_plural = "Ссылки"
-        db_table = "address"
+        verbose_name = "Типы"
+        verbose_name_plural = "Типы"
+        db_table = "types"
 
-    slug_url = models.SlugField(null=True)
+    type = models.IntegerField(unique=True)
+    name_of_type = models.CharField(max_length=100)
 
 
 class User(models.Model):
@@ -38,7 +45,7 @@ class User(models.Model):
     password = models.CharField(max_length=1000,
                                 verbose_name="Пароль")
 
-# модель(слаг)+
+# модель(тип)+
 # Длина +
 # Мета(verbose + plural, table_name) +
 # ссылки в нотах +
