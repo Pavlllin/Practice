@@ -18,4 +18,4 @@ class NoteSerializer(serializers.ModelSerializer):
 class NoteDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = "__all__"
+        fields = ("text", "author", "type_of_text",)
