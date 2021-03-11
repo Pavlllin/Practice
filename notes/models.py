@@ -10,7 +10,7 @@ class Note(models.Model):
 
     text = models.CharField(max_length=5000,
                             verbose_name="Текст записи")
-    author = models.ForeignKey('notes.User', on_delete=models.CASCADE,
+    author = models.ForeignKey('users.User', on_delete=models.CASCADE,
                                verbose_name="Автор записи")
 
     slug_address = models.CharField(max_length=100,
@@ -32,20 +32,9 @@ class Types(models.Model):
     name_of_type = models.CharField(max_length=100)
 
 
-class User(models.Model):
-    class Meta:
-        verbose_name = "Пользователи"
-        verbose_name_plural = "Пользователи"
-        db_table = "user"
 
-    name = models.CharField(max_length=100,
-                            verbose_name="Имя пользователя")
-    login = models.CharField(max_length=100,
-                             verbose_name="Логин")
-    password = models.CharField(max_length=1000,
-                                verbose_name="Пароль")
 
-# модель(тип)+
-# Длина +
-# Мета(verbose + plural, table_name) +
-# ссылки в нотах +
+
+#Jwt
+#middleware
+#Создать процесс аунтификации

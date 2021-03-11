@@ -1,7 +1,7 @@
 from rest_framework import generics
 
-from .models import User, Note
-from .serializers import UserSerializer, NoteSerializer,NoteDetailSerializer
+from .models import Note
+from .serializers import NoteSerializer,NoteDetailSerializer
 
 
 # Create your views here.
