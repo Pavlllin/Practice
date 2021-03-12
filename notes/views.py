@@ -16,6 +16,5 @@ class NoteView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         url_slug = self.kwargs['slug_url']
-        print(url_slug)
         notes = Note.objects.get(slug_address=url_slug)
         return notes
