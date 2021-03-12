@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from .models import User
 from .services import decode_auth_token
-from pastebin.settings import BLACK_LIST
+from pastebin.settings import WHITE_LIST
 from rest_framework.response import Response
 
 class SimpleMiddleware():
@@ -12,7 +12,7 @@ class SimpleMiddleware():
 
     def __call__(self, request):
         response = self.get_response(request)
-        if(request.path[:11] in BLACK_LIST):
+        if(not(any(request.path.startswith(url) for url in WHITE_LIST))):
             print("Success")
             try:
                 response.user = User.objects.get(login=decode_auth_token(request.headers["X-Auntification"]))

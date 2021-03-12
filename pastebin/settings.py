@@ -136,6 +136,8 @@ time_token = 5
 
 salt ="asdaADQEzcczfaAQ"
 
-BLACK_LIST = [
-    "/api/notes/",
+WHITE_LIST = [
+    "/admin/",
+    "/api/login/",
+    "/api/register/"
 ]
