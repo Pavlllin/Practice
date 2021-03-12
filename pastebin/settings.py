@@ -135,3 +135,8 @@ with open('jwtRS256.key.pub') as f:
 time_token = 5
 
 salt ="asdaADQEzcczfaAQ"
+
+BLACK_LIST = [
+    "/api/login/",
+    "/api/register"
+]

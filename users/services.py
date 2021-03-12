@@ -25,7 +25,6 @@ def encode_auth_token(user_id):
         return e
 
 
-@staticmethod
 def decode_auth_token(auth_token):
     """
     Decodes the auth token

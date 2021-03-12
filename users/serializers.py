@@ -1,6 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-from rest_framework.response import Response
+
 
 from .models import User
 from .services import encode_auth_token
