@@ -3,11 +3,6 @@ from django.db import models
 
 # Create your models here.
 class Note(models.Model):
-    class Meta:
-        verbose_name = "Записи"
-        verbose_name_plural = "Записи"
-        db_table = "note"
-
     text = models.CharField(max_length=5000,
                             verbose_name="Текст записи")
     author = models.ForeignKey('users.User', on_delete=models.CASCADE,
@@ -18,23 +13,27 @@ class Note(models.Model):
                                     null=True,
                                     blank=True)
 
-    type_of_text = models.ForeignKey('notes.Types', on_delete=models.CASCADE,
+    type_of_text = models.ForeignKey('notes.Type', on_delete=models.CASCADE,
                                      verbose_name="Тип записи", null=False)
 
+    def __str__(self):
+        return self.text[:50]
 
-class Types(models.Model):
+    class Meta:
+        verbose_name = "Записи"
+        verbose_name_plural = "Записи"
+        db_table = "note"
+
+
+class Type(models.Model):
+    type = models.IntegerField(unique=True)
+    name_of_type = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name_of_type
+
     class Meta:
         verbose_name = "Типы"
         verbose_name_plural = "Типы"
         db_table = "types"
 
-    type = models.IntegerField(unique=True)
-    name_of_type = models.CharField(max_length=100)
-
-
-
-
-
-#Jwt
-#middleware
-#Создать процесс аунтификации

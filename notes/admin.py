@@ -4,4 +4,4 @@ from .models import *
 
 admin.site.register(Note)
 
-admin.site.register(Types)
+admin.site.register(Type)

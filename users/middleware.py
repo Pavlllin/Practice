@@ -1,5 +1,6 @@
 from .models import User
 import jwt
+from .services import decode_auth_token
 
 class SimpleMiddleware:
     def __init__(self, get_response):
@@ -7,12 +8,6 @@ class SimpleMiddleware:
         # One-time configuration and initialization.
 
     def __call__(self, request):
-        # Code to be executed for each request before
-        # the view (and later middleware) are called.
-
         response = self.get_response(request)
-#        request.user = User.object.get(pk=jwt['user_id'])
-        # Code to be executed for each request/response after
-        # the view is called.
-
+        response.user = User.object.get(login=decode_auth_token(request.headers["X-Auntification"]))
         return response

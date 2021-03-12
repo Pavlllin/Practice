@@ -121,8 +121,17 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+with open('jwtRS256.key') as f:
+    private_key = f.read()
+
+with open('jwtRS256.key.pub') as f:
+    public_key = f.read()
+
+time_token = 5
+
+salt ="asdaADQEzcczfaAQ"
