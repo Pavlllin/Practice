@@ -1,8 +1,9 @@
-from django.shortcuts import redirect
-
+from django.http import HttpResponse
+from django.http import JsonResponse
 from .models import User
 from .services import decode_auth_token
 from pastebin.settings import BLACK_LIST
+from rest_framework.response import Response
 
 class SimpleMiddleware():
     def __init__(self, get_response):
@@ -11,12 +12,12 @@ class SimpleMiddleware():
 
     def __call__(self, request):
         response = self.get_response(request)
-        if(request.path in BLACK_LIST):
+        if(request.path[:11] in BLACK_LIST):
             print("Success")
             try:
                 response.user = User.objects.get(login=decode_auth_token(request.headers["X-Auntification"]))
                 return response
             except Exception:
-                return redirect("/api/login/")
+                return JsonResponse({'error': "You are not auth"}, status=401)
         else:
             return response

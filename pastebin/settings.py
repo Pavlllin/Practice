@@ -137,6 +137,5 @@ time_token = 5
 salt ="asdaADQEzcczfaAQ"
 
 BLACK_LIST = [
-    "/notes/",
-    "/notes/<slug:slug_url>/"
+    "/api/notes/",
 ]

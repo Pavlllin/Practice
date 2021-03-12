@@ -37,8 +37,9 @@ class LoginView(generics.CreateAPIView):
                                                                salt=salt))
             if Users.first() is not None:
                 ans = "Успешный вход"
-                response = Response(data=ans,status=201)
-                response["X-Auntification"] = encode_auth_token(serializer.data["login"])
+                auth_token = encode_auth_token(serializer.data["login"])
+                res_dict = {"res":"Успешный вход","X-Auntification":auth_token}
+                response = Response(data=res_dict,status=201)
                 return response
             else:
                 ans = "Неправильный логин или пароль"
