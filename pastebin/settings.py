@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'notes',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.middleware.AuthMiddleware',
 ]
 
 ROOT_URLCONF = 'pastebin.urls'
@@ -119,8 +121,25 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+with open('jwtRS256.key') as f:
+    PRIVATE_KEY = f.read()
+
+with open('jwtRS256.key.pub') as f:
+    PUBLIC_KEY = f.read()
+
+TIME_TOKEN = 5
+
+SALT ="asdaADQEzcczfaAQ"
+
+TOKEN_HEADER = 'X-Auntification'
+
+WHITE_LIST = [
+    "/admin/",
+    "/api/users/login/",
+    "/api/users/register/"
+]
