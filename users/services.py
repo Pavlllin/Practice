@@ -1,5 +1,6 @@
 import datetime
 from dataclasses import dataclass
+from typing import Optional
 
 import jwt
 from django.conf import settings
@@ -17,7 +18,7 @@ class UserData:
 
 @dataclass
 class CheckResult:
-    token: str
+    token: Optional[str]
     ans: str
     status: str
 
@@ -39,7 +40,7 @@ def encode_auth_token(login: str) -> str:
             algorithm='RS256'
         )
     except Exception as e:
-        return e
+        raise e
 
 
 def decode_auth_token(auth_token: str) -> str:
@@ -52,10 +53,10 @@ def decode_auth_token(auth_token: str) -> str:
         payload = jwt.decode(auth_token, settings.PUBLIC_KEY, algorithms=["RS256"])
         return payload['sub']
     except Exception as e:
-        return e
+        raise e
 
 
-def check_user(user_data):
+def check_user(user_data: UserData) -> CheckResult:
     user = User.objects.filter(login=user_data.login,
                                password=make_password(user_data.password,
                                                       salt=settings.SALT))
