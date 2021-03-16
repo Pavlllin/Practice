@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'users.middleware.SimpleMiddleware',
+    'users.middleware.AuthMiddleware',
 ]
 
 ROOT_URLCONF = 'pastebin.urls'
@@ -127,17 +127,19 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 with open('jwtRS256.key') as f:
-    private_key = f.read()
+    PRIVATE_KEY = f.read()
 
 with open('jwtRS256.key.pub') as f:
-    public_key = f.read()
+    PUBLIC_KEY = f.read()
 
-time_token = 5
+TIME_TOKEN = 5
 
-salt ="asdaADQEzcczfaAQ"
+SALT ="asdaADQEzcczfaAQ"
+
+TOKEN_HEADER = 'X-Auntification'
 
 WHITE_LIST = [
     "/admin/",
-    "/api/login/",
-    "/api/register/"
+    "/api/users/login/",
+    "/api/users/register/"
 ]

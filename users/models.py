@@ -7,7 +7,6 @@ class User(models.Model):
                              unique=True,
                              verbose_name="Логин")
     password = models.CharField(max_length=1000,
-                                unique=True,
                                 verbose_name="Пароль")
     def __str__(self):
         return self.login

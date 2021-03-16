@@ -1,10 +1,8 @@
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
-
 from .models import User
-from .services import encode_auth_token
-from pastebin.settings import salt
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -16,7 +14,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user = User(
             name=validated_data['name'],
             login=validated_data['login'],
-            password=make_password(validated_data['password'], salt=salt)
+            password=make_password(validated_data['password'], salt=settings.SALT)
         )
         user.save()
         return user
