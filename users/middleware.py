@@ -15,7 +15,10 @@ class AuthMiddleware():
         if (not (any(request.path.startswith(url) for url in settings.WHITE_LIST))):
             print("Success")
             try:
-                request.User = User.objects.get(login=decode_auth_token(request.headers[settings.TOKEN_HEADER]))
+                user = User.objects.get(login=decode_auth_token(request.headers[settings.TOKEN_HEADER]))
+                user.is_active = True
+                user.is_authenticated = True
+                request.user = user
                 response = self.get_response(request)
                 return response
             except Exception:

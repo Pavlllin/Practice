@@ -1,12 +1,12 @@
 
 from rest_framework import generics
+from rest_framework import status
 from rest_framework.response import Response
 
 from .models import User
 from .serializers import UserRegisterSerializer, UserLoginSerializer
-from .services import encode_auth_token,check_user
+from .services import encode_auth_token, check_user, UserData
 
-from django.conf import settings
 
 # Create your views here
 class RegisterView(generics.CreateAPIView):
@@ -19,11 +19,11 @@ class RegisterView(generics.CreateAPIView):
                 serializer.save()
                 auth_token = encode_auth_token(serializer.data["login"])
                 res_dict = {"res": "Успешный вход", "token": auth_token}
-                response = Response(data=res_dict, status=201)
+                response = Response(data=res_dict, status=status.HTTP_200_OK)
                 return response
         else:
-            ans = "Неправильный логин или пароль"
-            return Response(data=ans, status=400)
+            ans_dict = {"res": "Неправильный логин или пароль"}
+            return Response(data=ans_dict, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(generics.CreateAPIView):
@@ -33,6 +33,8 @@ class LoginView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            return check_user(serializer)
-
-
+            user_data = UserData(login=serializer.data["login"], password=serializer.data["password"])
+            check_result = check_user(user_data)
+            res_dict = {"ans": check_result.ans, "token": check_result.token}
+            response = Response(data=res_dict, status=check_result.status)
+            return response
