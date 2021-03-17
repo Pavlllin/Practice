@@ -32,6 +32,7 @@ class NoteDownloadView(APIView):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
         csv_file = csv.writer(response)
+        csv_file.writerow(["Текст записи", "Адрес записи", "Тип записи"])
         for n in notes:
             print(n.text, n.slug_address, n.type_of_text)
             csv_file.writerow([n.text, n.slug_address, n.type_of_text])

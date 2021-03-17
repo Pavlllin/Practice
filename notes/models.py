@@ -6,7 +6,7 @@ class Note(models.Model):
     text = models.CharField(max_length=5000,
                             verbose_name="Текст записи")
     author = models.ForeignKey('users.User', on_delete=models.CASCADE,
-                               verbose_name="Автор записи")
+                               verbose_name="Автор записи", related_name="note_author")
 
     slug_address = models.CharField(max_length=100,
                                     verbose_name="адрес записи",
