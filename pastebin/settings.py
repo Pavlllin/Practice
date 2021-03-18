@@ -144,6 +144,8 @@ WHITE_LIST = [
     "/api/users/register/"
 ]
 
+CELERY_BROKER_URL = 'amqp://localhost'
+
 # LOGGING = {
 #     'version': 1,
 #     'filters': {

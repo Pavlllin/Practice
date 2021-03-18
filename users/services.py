@@ -1,7 +1,7 @@
 import csv
-from datetime import datetime
 import random
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 
 import jwt
@@ -11,7 +11,7 @@ from notes.models import Note, Type
 from rest_framework import status
 
 from .models import User
-
+from celery import shared_task
 
 @dataclass
 class UserData:
@@ -71,7 +71,7 @@ def check_user(user_data: UserData) -> CheckResult:
         check_result = CheckResult(token=None, ans="Неправильный логин или пароль", status=status.HTTP_400_BAD_REQUEST)
         return check_result
 
-
+@shared_task()
 def create_report(queryset):
     with open('content/report' + str(datetime.now().strftime("%m_%d_%Y_%H_%M_%S")) + ".csv", 'w', newline='',
               encoding='utf-8') as file:
