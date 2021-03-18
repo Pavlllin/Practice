@@ -1,4 +1,5 @@
-import datetime
+import csv
+from datetime import datetime
 import random
 from dataclasses import dataclass
 from typing import Optional
@@ -69,6 +70,19 @@ def check_user(user_data: UserData) -> CheckResult:
     else:
         check_result = CheckResult(token=None, ans="Неправильный логин или пароль", status=status.HTTP_400_BAD_REQUEST)
         return check_result
+
+
+def create_report(queryset):
+    with open('content/report' + str(datetime.now().strftime("%m_%d_%Y_%H_%M_%S")) + ".csv", 'w', newline='',
+              encoding='utf-8') as file:
+        csv_file = csv.writer(file, delimiter=',')
+        csv_file.writerow(["Логин", "Текст записи", "Адрес записи", "Тип записи"])
+        queryset = queryset.prefetch_related("note_author__type_of_text").values('note_author__text',
+                                                                                 'note_author__slug_address',
+                                                                                 'note_author__type_of_text', 'login')
+        for user in queryset:
+            csv_file.writerow([user['login'], user['note_author__text'], user['note_author__slug_address'],
+                               user['note_author__type_of_text']])
 
 
 def create_new_user():

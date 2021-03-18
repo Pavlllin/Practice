@@ -25,8 +25,6 @@ class NoteView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class NoteDownloadView(APIView):
-    serializer_class = NoteDetailSerializer
-
     def get(self, request):
         notes = Note.objects.filter(author__login=request.user)
         response = HttpResponse(content_type='text/csv')
