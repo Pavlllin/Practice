@@ -3,3 +3,4 @@ jwtRS256.key.pub
 jwtRS256.key
 *.pyc
 *.sqlite3
+content/
