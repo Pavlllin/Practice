@@ -16,6 +16,14 @@ services:
     depends_on:
       - rabbitmq
       - postgres
+  celer_beat:
+    image: "myappimage"
+    command: celery -A pastebin beat
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbitmq
+      - postgres
   myapp:
     build: .
     ports:
