@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'pastebin.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pastebin',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
+        'PASSWORD': 'docker',
+        'HOST': 'postgres',
         'PORT': '5432',
     }
 }
@@ -144,7 +144,7 @@ WHITE_LIST = [
     "/api/users/register/"
 ]
 
-CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/%2F'
 
 # LOGGING = {
 #     'version': 1,

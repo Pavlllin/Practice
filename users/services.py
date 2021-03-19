@@ -1,7 +1,6 @@
-import csv
 import random
 from dataclasses import dataclass
-from datetime import datetime
+import datetime
 from typing import Optional
 
 import jwt

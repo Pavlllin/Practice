@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: docker
+    image: "postgres"
+  rabbitmq:
+    image: "rabbitmq"
+  celeryapp:
+    image: "myappimage"
+    command: celery -A pastebin worker --loglevel=INFO
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbitmq
+      - postgres
+  myapp:
+    build: .
+    ports:
+      - "8000:5432"
+    volumes:
+      - .:/app
+    image: "myappimage"
+    command: python manage.py runserver 0.0.0.0:5432
