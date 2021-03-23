@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-from .celery import app
 from celery.schedules import crontab
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -146,15 +145,12 @@ WHITE_LIST = [
 ]
 
 CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/%2F'
-
-app.conf.beat_schedule = {
-    # Executes every Monday morning at 7:30 a.m.
+CELERY_BEAT_SCHEDULE = {
     'add-every-monday-morning': {
         'task': 'users.tasks.create_report_task',
         'schedule': crontab(hour=12, minute=31),
     },
 }
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
