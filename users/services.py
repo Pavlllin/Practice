@@ -1,15 +1,15 @@
-import csv
-from datetime import datetime
 import random
 from dataclasses import dataclass
+import datetime
 from typing import Optional
 
 import jwt
+import csv
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from notes.models import Note, Type
 from rest_framework import status
-
+from typing import Sequence
 from .models import User
 
 
@@ -71,12 +71,15 @@ def check_user(user_data: UserData) -> CheckResult:
         check_result = CheckResult(token=None, ans="Неправильный логин или пароль", status=status.HTTP_400_BAD_REQUEST)
         return check_result
 
-
-def create_report(queryset):
-    with open('content/report' + str(datetime.now().strftime("%m_%d_%Y_%H_%M_%S")) + ".csv", 'w', newline='',
+def create_report(user_ids: Optional[Sequence[int]] = None):
+    with open('content/report' + str(datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S")) + ".csv", 'w', newline='',
               encoding='utf-8') as file:
         csv_file = csv.writer(file, delimiter=',')
         csv_file.writerow(["Логин", "Текст записи", "Адрес записи", "Тип записи"])
+        if (user_ids is None):
+            queryset = User.objects.all()
+        else:
+            queryset = User.objects.filter(pk__in=user_ids)
         queryset = queryset.prefetch_related("note_author__type_of_text").values('note_author__text',
                                                                                  'note_author__slug_address',
                                                                                  'note_author__type_of_text', 'login')

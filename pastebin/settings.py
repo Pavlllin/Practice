@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-
+from celery.schedules import crontab
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'pastebin.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pastebin',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
+        'PASSWORD': 'docker',
+        'HOST': 'postgres',
         'PORT': '5432',
     }
 }
@@ -143,6 +143,20 @@ WHITE_LIST = [
     "/api/users/login/",
     "/api/users/register/"
 ]
+
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/%2F'
+CELERY_BEAT_SCHEDULE = {
+    'add-every-monday-morning': {
+        'task': 'users.tasks.create_report_task',
+        'schedule': crontab(hour=12, minute=31),
+    },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 # LOGGING = {
 #     'version': 1,
