@@ -9,7 +9,7 @@ from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from notes.models import Note, Type
 from rest_framework import status
-
+from typing import Sequence
 from .models import User
 
 
@@ -71,7 +71,7 @@ def check_user(user_data: UserData) -> CheckResult:
         check_result = CheckResult(token=None, ans="Неправильный логин или пароль", status=status.HTTP_400_BAD_REQUEST)
         return check_result
 
-def create_report(user_ids: list = None):
+def create_report(user_ids: Optional[Sequence[int]] = None):
     with open('content/report' + str(datetime.datetime.now().strftime("%m_%d_%Y_%H_%M_%S")) + ".csv", 'w', newline='',
               encoding='utf-8') as file:
         csv_file = csv.writer(file, delimiter=',')
