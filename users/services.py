@@ -1,15 +1,16 @@
+import csv
+import datetime
 import random
 from dataclasses import dataclass
-import datetime
 from typing import Optional
+from typing import Sequence
 
 import jwt
-import csv
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from notes.models import Note, Type
 from rest_framework import status
-from typing import Sequence
+
 from .models import User
 
 
