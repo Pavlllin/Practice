@@ -1,11 +1,11 @@
 from rest_framework import permissions
-from notes.views import  NoteView
 
 
 class NotePermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-         if view == NoteView:
-            noteauthor = obj.author__login
+            noteauthor = obj.author
+            print(noteauthor)
+            print(request.user)
             if request.user == noteauthor:
                 return True
             else:
