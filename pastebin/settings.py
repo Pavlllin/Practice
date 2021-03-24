@@ -156,7 +156,9 @@ CELERY_BEAT_SCHEDULE = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'users.middleware.AuthClass',
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'utils.django.pagination.pagination.CustomPagination',
+    'PAGE_SIZE': 5,
 }
 
 # LOGGING = {
