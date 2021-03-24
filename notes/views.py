@@ -2,7 +2,10 @@ import csv
 
 from django.http import HttpResponse
 from rest_framework import generics
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.views import APIView
+from users.models import User
 
 from .models import Note
 from .serializers import NoteSerializer, NoteDetailSerializer
@@ -10,9 +13,25 @@ from .serializers import NoteSerializer, NoteDetailSerializer
 
 # Create your views here.
 
+
 class NoteListView(generics.ListAPIView, generics.CreateAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(author=User.objects.get(pk=request.user.pk))
+            res_dict = {"res": "Создана новая запись"}
+            response = Response(data=res_dict, status=status.HTTP_200_OK)
+            return response
+        res_dict = {"res": "Не создана новая запись"}
+        response = Response(data=res_dict, status=status.HTTP_200_OK)
+        return response
+
+    def get_queryset(self):
+        notes = Note.objects.filter(author__pk=self.request.user.pk)
+        return  notes
 
 
 class NoteView(generics.RetrieveUpdateDestroyAPIView):
