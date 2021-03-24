@@ -6,13 +6,16 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.models import User
+
 from users.permissions import NotePermission
+
 
 from .models import Note
 from .serializers import NoteSerializer, NoteDetailSerializer
 
 
 # Create your views here.
+
 
 class NoteListView(generics.ListAPIView, generics.CreateAPIView):
     queryset = Note.objects.all()
@@ -31,7 +34,8 @@ class NoteListView(generics.ListAPIView, generics.CreateAPIView):
 
     def get_queryset(self):
         notes = Note.objects.filter(author__pk=self.request.user.pk)
-        return notes
+        return  notes
+
 
 
 class NoteView(generics.RetrieveUpdateDestroyAPIView):
