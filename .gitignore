@@ -4,3 +4,4 @@ jwtRS256.key
 *.pyc
 *.sqlite3
 content/
+celerybeat-schedule
