@@ -7,12 +7,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.models import User
 
-from users.permissions import NotePermission
-
-
 from .models import Note
 from .serializers import NoteSerializer, NoteDetailSerializer
-
+from users.permissions import NotePermission
 
 # Create your views here.
 
@@ -20,7 +17,6 @@ from .serializers import NoteSerializer, NoteDetailSerializer
 class NoteListView(generics.ListAPIView, generics.CreateAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
-
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -34,8 +30,7 @@ class NoteListView(generics.ListAPIView, generics.CreateAPIView):
 
     def get_queryset(self):
         notes = Note.objects.filter(author__pk=self.request.user.pk)
-        return  notes
-
+        return notes
 
 
 class NoteView(generics.RetrieveUpdateDestroyAPIView):
@@ -44,8 +39,8 @@ class NoteView(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         url_slug = self.kwargs['slug_url']
         notes = Note.objects.get(slug_address=url_slug)
-        if NotePermission.has_object_permission(self, request=self.request, view=self, obj=notes):
-            return notes
+        self.check_object_permissions(self.request, notes)
+        return notes
 
 
 class NoteDownloadView(APIView):
