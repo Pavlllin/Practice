@@ -156,10 +156,7 @@ CELERY_BEAT_SCHEDULE = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'users.middleware.AuthClass',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'users.permissions.NotePermission',
-    ],
+    ]
 }
 
 # LOGGING = {
