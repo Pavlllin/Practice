@@ -3,13 +3,15 @@ import csv
 from django.http import HttpResponse
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.models import User
-
-from .models import Note
-from .serializers import NoteSerializer, NoteDetailSerializer
 from users.permissions import NotePermission
+
+from .models import Note,Type
+from .serializers import NoteSerializer, NoteDetailSerializer
+
 
 # Create your views here.
 
@@ -19,7 +21,7 @@ class NoteListView(generics.ListAPIView, generics.CreateAPIView):
     serializer_class = NoteSerializer
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             serializer.save(author=User.objects.get(pk=request.user.pk))
             res_dict = {"res": "Создана новая запись"}
             response = Response(data=res_dict, status=status.HTTP_200_OK)
@@ -36,11 +38,38 @@ class NoteListView(generics.ListAPIView, generics.CreateAPIView):
 class NoteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NoteDetailSerializer
     permission_classes = [NotePermission]
+
     def get_object(self):
         url_slug = self.kwargs['slug_url']
         notes = Note.objects.get(slug_address=url_slug)
         self.check_object_permissions(self.request, notes)
         return notes
+
+
+class UploadNotesCSV(APIView):
+    parser_classes = [FileUploadParser]
+
+    def put(self, request, format=None):
+        file_csv = request.data['file']
+        notes = ""
+        text = ""
+        self.check_object_permissions(self.request, notes)
+        for line in file_csv:
+            text = text + line.decode()
+        text = text.split("\r\n")[4:-3]
+        for item in text:
+            items = item.split(",")
+            notes = {
+                "text": items[0],
+                "type_of_text": Type.objects.get(name_of_type=items[1]).pk
+            }
+            serializer = NoteSerializer(data=notes)
+            if serializer.is_valid():
+                serializer.save(author=User.objects.get(pk=request.user.pk))
+
+        res_dict = {"res": "Успешная загрузка"}
+        response = Response(data=res_dict, status=status.HTTP_200_OK)
+        return response
 
 
 class NoteDownloadView(APIView):
