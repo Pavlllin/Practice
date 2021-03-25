@@ -1,17 +1,17 @@
 import csv
+import io
 
 from django.http import HttpResponse
 from rest_framework import generics
 from rest_framework import status
-from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.models import User
 from users.permissions import NotePermission
 
-from .models import Note,Type
-from .serializers import NoteSerializer, NoteDetailSerializer
-
+from .models import Note
+from .serializers import NoteSerializer, NoteDetailSerializer, FileUploadSerializer
+from .tasks import upload_csv
 
 # Create your views here.
 
@@ -19,6 +19,7 @@ from .serializers import NoteSerializer, NoteDetailSerializer
 class NoteListView(generics.ListAPIView, generics.CreateAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -47,26 +48,15 @@ class NoteView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UploadNotesCSV(APIView):
-    parser_classes = [FileUploadParser]
 
     def put(self, request, format=None):
-        file_csv = request.data['file']
-        notes = ""
-        text = ""
-        self.check_object_permissions(self.request, notes)
-        for line in file_csv:
-            text = text + line.decode()
-        text = text.split("\r\n")[4:-3]
-        for item in text:
-            items = item.split(",")
-            notes = {
-                "text": items[0],
-                "type_of_text": Type.objects.get(name_of_type=items[1]).pk
-            }
-            serializer = NoteSerializer(data=notes)
-            if serializer.is_valid():
-                serializer.save(author=User.objects.get(pk=request.user.pk))
-
+        serializer = FileUploadSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = request.user
+        file_csv = serializer.validated_data['file']
+        file_csv = io.StringIO(file_csv.read().decode())
+        serializer = NoteSerializer()
+        upload_csv(file_csv,user)
         res_dict = {"res": "Успешная загрузка"}
         response = Response(data=res_dict, status=status.HTTP_200_OK)
         return response
