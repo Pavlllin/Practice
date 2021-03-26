@@ -101,3 +101,8 @@ def create_new_note():
             new_note = Note(text=i, author=User.objects.get(login=j), slug_address=str(random.randint(0, 10000)),
                             type_of_text=Type.objects.get(type = j-1))
             new_note.save()
+
+
+def create_stat_users():
+    today = datetime.today()
+    result = User.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day)

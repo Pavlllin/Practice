@@ -3,7 +3,7 @@ from datetime import datetime
 
 from users.models import User
 
-from .models import Type
+from .models import Type, Note
 from .serializers import NoteSerializer
 
 
@@ -33,3 +33,7 @@ def create_csv_file(file_csv):
 
         return path
 
+
+def create_stat_notes(type):
+    today = datetime.now()
+    result = Note.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day, type=type)
