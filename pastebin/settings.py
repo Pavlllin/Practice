@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'notes',
     'users',
+    'stats',
 ]
 
 MIDDLEWARE = [
@@ -87,7 +88,7 @@ DATABASES = {
         'HOST': 'postgres',
         'PORT': '5432',
     },
-    'statistic':{
+    'statistic': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres_statistic',
         'USER': 'postgres',
@@ -97,7 +98,7 @@ DATABASES = {
     }
 }
 
-
+DATABASE_ROUTERS = ['pastebin.router.StatsRouter']
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 

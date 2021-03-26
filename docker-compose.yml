@@ -6,12 +6,6 @@ services:
     environment:
       POSTGRES_PASSWORD: docker
     image: "postgres"
-  postgres_statistic:
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: docker
-    image: "postgres"
   rabbitmq:
     image: "rabbitmq"
   celeryapp:
