@@ -33,8 +33,10 @@ class StatsRouter:
         Make sure the auth and contenttypes apps only appear in the
         'auth_db' database.
         """
-        print(app_label)
-        if app_label in self.route_app_labels:
-            return True
+        if db == "statistic":
+            if app_label in self.route_app_labels:
+                return True
+            else:
+                return False
         else:
-            return False
+            return app_label not in self.route_app_labels

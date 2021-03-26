@@ -32,3 +32,4 @@ def create_csv_file(file_csv):
             csv_file.writerow([row[0], Type.objects.get(name_of_type=row[1]).pk])
 
         return path
+
