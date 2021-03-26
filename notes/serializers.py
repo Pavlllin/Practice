@@ -12,3 +12,9 @@ class NoteDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
         fields = ("text", "author", "type_of_text",)
+
+class FileUploadSerializer(serializers.Serializer):
+    file = serializers.FileField()
+
+    class Meta:
+        fields = ('file',)
