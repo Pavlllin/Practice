@@ -57,7 +57,7 @@ class UploadNotesCSV(APIView):
         file_csv = io.StringIO(file_csv.read().decode())
         serializer = NoteSerializer()
         path = create_csv_file(file_csv)
-        upload_csv(path,user)
+        upload_csv.delay(path,str(user))
         res_dict = {"res": "Успешная загрузка"}
         response = Response(data=res_dict, status=status.HTTP_200_OK)
         return response
