@@ -86,6 +86,14 @@ DATABASES = {
         'PASSWORD': 'docker',
         'HOST': 'postgres',
         'PORT': '5432',
+    },
+    'statistic':{
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres_statistic',
+        'USER': 'postgres',
+        'PASSWORD': 'docker',
+        'HOST': 'postgres',
+        'PORT': '5432',
     }
 }
 
