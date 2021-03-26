@@ -12,7 +12,7 @@ from users.permissions import NotePermission
 from .models import Note
 from .serializers import NoteSerializer, NoteDetailSerializer, FileUploadSerializer
 from .tasks import upload_csv
-
+from .services import create_csv_file
 # Create your views here.
 
 
@@ -56,7 +56,8 @@ class UploadNotesCSV(APIView):
         file_csv = serializer.validated_data['file']
         file_csv = io.StringIO(file_csv.read().decode())
         serializer = NoteSerializer()
-        upload_csv(file_csv,user)
+        path = create_csv_file(file_csv)
+        upload_csv(path,user)
         res_dict = {"res": "Успешная загрузка"}
         response = Response(data=res_dict, status=status.HTTP_200_OK)
         return response
