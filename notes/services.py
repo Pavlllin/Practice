@@ -17,8 +17,9 @@ def upload_csv_from_file(path: str, user: str):
         user = User.objects.get(login=user)
         for row in reader:
             notes_dict = {
-                "text": row[0],
-                "type_of_text": row[1],
+                "title": row[0],
+                "text": row[1],
+                "type_of_text": row[2],
                 "author": user.pk
             }
             serializer = NoteSerializer(data=notes_dict)
@@ -33,7 +34,7 @@ def create_csv_file(file_csv):
         reader = csv.reader(file_csv)
         csv_file = csv.writer(file, delimiter=',')
         for row in reader:
-            csv_file.writerow([row[0], Type.objects.get(name_of_type=row[1]).pk])
+            csv_file.writerow([row[0],row[1], Type.objects.get(name_of_type=row[2]).pk])
 
         return path
 
