@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'notes',
     'users',
+    'stats',
 ]
 
 MIDDLEWARE = [
@@ -86,10 +87,18 @@ DATABASES = {
         'PASSWORD': 'docker',
         'HOST': 'postgres',
         'PORT': '5432',
+    },
+    'statistic': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres_statistic',
+        'USER': 'postgres',
+        'PASSWORD': 'docker',
+        'HOST': 'postgres',
+        'PORT': '5432',
     }
 }
 
-
+DATABASE_ROUTERS = ['pastebin.router.StatsRouter']
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -150,6 +159,10 @@ CELERY_BEAT_SCHEDULE = {
     'add-every-monday-morning': {
         'task': 'users.tasks.create_report_task',
         'schedule': crontab(hour=12, minute=31),
+    },
+    'add-every-day': {
+        'task': 'stats.tasks.create_statistic',
+        'schedule': crontab(hour=10, minute=7),
     },
 }
 

@@ -8,6 +8,9 @@ class User(models.Model):
                              verbose_name="Логин")
     password = models.CharField(max_length=1000,
                                 verbose_name="Пароль")
+
+    date = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
+
     def __str__(self):
         return self.login
 

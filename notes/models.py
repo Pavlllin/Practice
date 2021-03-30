@@ -16,6 +16,9 @@ class Note(models.Model):
     type_of_text = models.ForeignKey('notes.Type', on_delete=models.CASCADE,
                                      verbose_name="Тип записи", null=False)
 
+    date = models.DateTimeField(verbose_name="Дата создания",auto_now_add=True)
+
+
     def __str__(self):
         return self.text[:50]
 
