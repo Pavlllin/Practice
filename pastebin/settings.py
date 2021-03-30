@@ -162,7 +162,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'add-every-day': {
         'task': 'stats.tasks.create_statistic',
-        'schedule': crontab(hour=8, minute=24),
+        'schedule': crontab(hour=10, minute=7),
     },
 }
 

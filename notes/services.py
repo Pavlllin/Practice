@@ -1,6 +1,8 @@
 import csv
 from datetime import datetime
+from typing import Optional
 
+from django.db.models import Count
 from django.db.models.functions import Length
 from stats.models import Stats
 from users.models import User
@@ -36,16 +38,22 @@ def create_csv_file(file_csv):
         return path
 
 
-def create_stat_notes(type, len_post=None):
+def create_stat_notes(len_post: Optional[int] = None):
     today = datetime.now()
     if len_post is None:
-        result = Note.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day,
-                                     type_of_text__name_of_type=type)
-        Stats(name="Кол-во записей с типом " + type + " было создано", result=result.count()).save()
+        result = Note.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day).values(
+            'type_of_text__name_of_type').annotate(
+            num_notes=Count("text")).values('type_of_text__name_of_type', 'num_notes')
+        for item in result:
+            Stats(name="Кол-во записей с типом " + item['type_of_text__name_of_type'] + " было создано",
+                  result=item['num_notes']).save()
     else:
         result = Note.objects.annotate(text_len=Length('text')).filter(date__year=today.year, date__month=today.month,
                                                                        date__day=today.day,
-                                                                       type_of_text__name_of_type=type,
-                                                                       text_len__gt=len_post)
-        Stats(name="Кол-во записей с типом " + type + " было создано, где длина текста больше " + str(len_post),
-              result=result.count()).save()
+                                                                       text_len__gt=len_post).values(
+            'type_of_text__name_of_type').annotate(num_notes=Count("text")).values('type_of_text__name_of_type',
+                                                                                   'num_notes')
+        for item in result:
+            Stats(name="Кол-во записей с типом " + item[
+                'type_of_text__name_of_type'] + " было создано, где длина текста больше " + str(len_post),
+                  result=item['num_notes']).save()
