@@ -160,6 +160,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'users.tasks.create_report_task',
         'schedule': crontab(hour=12, minute=31),
     },
+    'add-every-day': {
+        'task': 'stats.tasks.create_statistic',
+        'schedule': crontab(hour=8, minute=24),
+    },
 }
 
 REST_FRAMEWORK = {

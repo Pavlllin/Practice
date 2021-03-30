@@ -1,6 +1,8 @@
 import csv
 from datetime import datetime
 
+from django.db.models.functions import Length
+from stats.models import Stats
 from users.models import User
 
 from .models import Type, Note
@@ -34,6 +36,16 @@ def create_csv_file(file_csv):
         return path
 
 
-def create_stat_notes(type):
+def create_stat_notes(type, len_post=None):
     today = datetime.now()
-    result = Note.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day, type=type)
+    if len_post is None:
+        result = Note.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day,
+                                     type_of_text__name_of_type=type)
+        Stats(name="Кол-во записей с типом " + type + " было создано", result=result.count()).save()
+    else:
+        result = Note.objects.annotate(text_len=Length('text')).filter(date__year=today.year, date__month=today.month,
+                                                                       date__day=today.day,
+                                                                       type_of_text__name_of_type=type,
+                                                                       text_len__gt=len_post)
+        Stats(name="Кол-во записей с типом " + type + " было создано, где длина текста больше " + str(len_post),
+              result=result.count()).save()
