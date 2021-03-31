@@ -1,10 +1,14 @@
+from pastebin.decorator import RouterDecorator
+
+
 class StatsRouter:
     route_app_labels = {'stats'}
+
     def db_for_read(self, model, **hints):
         """
         Attempts to read auth and contenttypes models go to auth_db.
         """
-        if model._meta.app_label in self.route_app_labels:
+        if model in RouterDecorator.models:
             return 'statistic'
         return 'default'
 
@@ -12,7 +16,7 @@ class StatsRouter:
         """
         Attempts to write auth and contenttypes models go to auth_db.
         """
-        if model._meta.app_label in self.route_app_labels:
+        if model in RouterDecorator.models:
             return 'statistic'
         return 'default'
 

@@ -1,6 +1,7 @@
 import csv
 import io
 
+from django.contrib.postgres.search import SearchVector
 from django.db.models import Q
 from django.http import HttpResponse
 from rest_framework import generics
@@ -39,8 +40,9 @@ class NoteListView(generics.ListAPIView, generics.CreateAPIView):
         if text is None:
             notes = Note.objects.filter(author__pk=self.request.user.pk)
         else:
-            notes = Note.objects.filter(Q(author__pk=self.request.user.pk),
-                                        Q(text__contains=text) | Q(title__contains=text))
+            notes = Note.objects.annotate(search=SearchVector('text') + SearchVector('title')).filter(
+                Q(author__pk=self.request.user.pk),
+                search=text)
         return notes
 
 

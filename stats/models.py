@@ -1,6 +1,9 @@
 from django.db import models
-
+from pastebin.decorator import RouterDecorator
 # Create your models here.
+
+
+@RouterDecorator()
 class Stats(models.Model):
     name = models.CharField(max_length=100, verbose_name="Имя статистики")
     result = models.IntegerField(verbose_name="Результат статистики")
@@ -14,13 +17,7 @@ class Stats(models.Model):
         verbose_name_plural = "Статистика"
         db_table = "Stats"
 
-
+@RouterDecorator()
 class TypeStats(models.Model):
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=50,unique=True)
-
-#Сколько пользоватей за день создался
-#Сколько txt файлов за день создалось
-#Сколько py файлов за день создалось
-#Сколько cpp файлов за день создалось
-#кол-во постов где длина содержания больше 500 символов за день
