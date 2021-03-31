@@ -1,6 +1,7 @@
 import csv
 import io
 
+from django.db.models import Q
 from django.http import HttpResponse
 from rest_framework import generics
 from rest_framework import status
@@ -11,8 +12,10 @@ from users.permissions import NotePermission
 
 from .models import Note
 from .serializers import NoteSerializer, NoteDetailSerializer, FileUploadSerializer
-from .tasks import upload_csv
 from .services import create_csv_file
+from .tasks import upload_csv
+
+
 # Create your views here.
 
 
@@ -32,7 +35,12 @@ class NoteListView(generics.ListAPIView, generics.CreateAPIView):
         return response
 
     def get_queryset(self):
-        notes = Note.objects.filter(author__pk=self.request.user.pk)
+        text = self.request.query_params.get("text")
+        if text is None:
+            notes = Note.objects.filter(author__pk=self.request.user.pk)
+        else:
+            notes = Note.objects.filter(Q(author__pk=self.request.user.pk),
+                                        Q(text__contains=text) | Q(title__contains=text))
         return notes
 
 
