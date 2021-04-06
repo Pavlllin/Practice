@@ -18,3 +18,6 @@ class User(models.Model):
         verbose_name = "Пользователи"
         verbose_name_plural = "Пользователи"
         db_table = "user"
+        indexes =[
+            models.Index(fields=['date'],name='date_user_idx')
+        ]
