@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from .models import User
-from .serializers import UserRegisterSerializer, UserLoginSerializer
+from .serializers import UserRegisterSerializer, UserLoginSerializer,UserProfileSerializer
 from .services import encode_auth_token, check_user, UserData
 
 
@@ -38,3 +38,12 @@ class LoginView(generics.CreateAPIView):
             res_dict = {"ans": check_result.ans, "token": check_result.token}
             response = Response(data=res_dict, status=check_result.status)
             return response
+
+
+class UserProfileView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+
+    def get_object(self):
+        user = User.objects.get(login = self.request.user.login)
+        return user

@@ -30,7 +30,7 @@ class Note(models.Model):
         db_table = "note"
         indexes = [
             models.Index(fields=['text'], name='text_idx'),
-            models.Index(fields=['date'],name='date_note_idx'),
+            models.Index(fields=['date'], name='date_note_idx'),
         ]
 
 

@@ -1,7 +1,6 @@
 import csv
 from datetime import datetime
 from typing import Optional
-
 from django.db.models import Count
 from django.db.models.functions import Length
 from stats.models import Stats
@@ -9,7 +8,6 @@ from users.models import User
 
 from .models import Type, Note
 from .serializers import NoteSerializer
-
 
 def upload_csv_from_file(path: str, user: str):
     with open(path) as file:
@@ -25,6 +23,9 @@ def upload_csv_from_file(path: str, user: str):
             serializer = NoteSerializer(data=notes_dict)
             serializer.is_valid(raise_exception=True)
             serializer.save(author=user)
+    user = User.objects.get(pk=user.pk)
+    user.count_notes = user.count_notes + len(reader);
+    user.save()
 
 
 def create_csv_file(file_csv):
