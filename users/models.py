@@ -11,6 +11,8 @@ class User(models.Model):
 
     date = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
 
+    count_notes = models.IntegerField(verbose_name="Кол-во записей пользователя",default=0)
+
     def __str__(self):
         return self.login
 
@@ -18,3 +20,6 @@ class User(models.Model):
         verbose_name = "Пользователи"
         verbose_name_plural = "Пользователи"
         db_table = "user"
+        indexes =[
+            models.Index(fields=['date'],name='date_user_idx')
+        ]

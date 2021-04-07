@@ -2,6 +2,7 @@ import csv
 import io
 
 from django.contrib.postgres.search import SearchVector
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponse
 from rest_framework import generics
@@ -24,10 +25,14 @@ class NoteListView(generics.ListAPIView, generics.CreateAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
 
+    @transaction.atomic()
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save(author=User.objects.get(pk=request.user.pk))
+            user = User.objects.get(pk=request.user.pk)
+            user.count_notes = user.count_notes + 1;
+            user.save()
             res_dict = {"res": "Создана новая запись"}
             response = Response(data=res_dict, status=status.HTTP_200_OK)
             return response
@@ -58,7 +63,6 @@ class NoteView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UploadNotesCSV(APIView):
-
     def put(self, request, format=None):
         serializer = FileUploadSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -74,6 +78,7 @@ class UploadNotesCSV(APIView):
 
 
 class NoteDownloadView(APIView):
+
     def get(self, request):
         notes = Note.objects.filter(author__login=request.user)
         response = HttpResponse(content_type='text/csv')

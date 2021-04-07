@@ -28,6 +28,10 @@ class Note(models.Model):
         verbose_name = "Записи"
         verbose_name_plural = "Записи"
         db_table = "note"
+        indexes = [
+            models.Index(fields=['text'], name='text_idx'),
+            models.Index(fields=['date'], name='date_note_idx'),
+        ]
 
 
 class Type(models.Model):
@@ -41,4 +45,7 @@ class Type(models.Model):
         verbose_name = "Типы"
         verbose_name_plural = "Типы"
         db_table = "types"
+        indexes = [
+            models.Index(fields=['name_of_type'], name='name_idx')
+        ]
 
